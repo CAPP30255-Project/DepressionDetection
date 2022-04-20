@@ -5,11 +5,10 @@
 
 \newpage
 
-\section{Summary of the Proposal}
 
 
 
-\section{Background}
+\section{Background/Summary of the Proposal}
 
 Recent research by WHO suggests that in the world, more than 264 million suffer from depression. Early intervention proved to be efficient in preventing severe depression. However, there are 2 main problems that make early intervention, or any intervention at all, harder to materialize. First of all, intervention requires ever presence of a certified individual in the relevant space. For instance, if the case is child depression, then a psychiatrist needs to be present in the school on a regular basis. Secondly, the fear of public judgement might prevent individuals to seek help from a person or express what they feel completely. In light of these problems, having an automated system that eliminates the necessity of a certified individual and removes the human judgement factor becomes a necessity. Moreover, such a system can suggest a psychiatrist an early diagnose, which then they can use to build on. Therefore, we seek to build a deep learning model that can identify early indications of human depression using a series of interviews conducted. Our contribution to the literature will be the identification of questions that possesses more valuable information in terms of identifying depression.  
 
@@ -37,16 +36,17 @@ Because the DAIC-WoZ Depression Database is one of only two public-use depressio
 
 
 
-– A detailed description of the related work. You should search for
-research papers and projects that solve the same or a similar problem.
-For the closest two or three such papers, you should describe what
-methods they used for obtaining the data, pre-processing the data,
-learning models, choosing metrics, and evaluating their results. You
-should also report their results, and what implications their work has
-on your project. (Learn as much as you can from such related work as
-it will give you an idea of what you need to teach yourself—beyond the
-material covered in class—for your project.)
 
+
+Lin et al. uses a bi-LSTM model with an attention layer and process audio & text features. They use ELMO word embeddings to create an embedding layer for the input text. One thing they note is the imbalance of the data between depressed and non depressed individuals. Therefore, they use a data re-sampling method to balance out two subclasses. They group every 10 response of a depressed individual, then they randomly select one response from the group. This process will be replicated in our project as well. They used traditional model testing metrics, F1 score, Recall, Precision. They also used a simple regression model to compare their results. The metrics they used are MAE and RMSE.
+
+
+
+
+
+ choosing metrics, and evaluating their results. You
+should also report their results, and what implications their work has
+on your project.
 
 
 
