@@ -1,4 +1,11 @@
 
+\begin{figure}[h!]
+\centering
+\shorthandoff{=}
+\includegraphics[scale=0.5]{paper/depress_detect.jpeg} 
+\shorthandoff{=}
+\end{figure}
+
 \newpage
 
 \tableofcontents
@@ -40,16 +47,20 @@ Because the DAIC-WoZ Depression Database is one of only two public-use depressio
 
 Lin et al. uses a bi-LSTM model with an attention layer and process audio & text features. They use ELMO word embeddings to create an embedding layer for the input text. One thing they note is the imbalance of the data between depressed and non depressed individuals. Therefore, they use a data re-sampling method to balance out two subclasses. They group every 10 response of a depressed individual, then they randomly select one response from the group. This process will be replicated in our project as well. They used traditional model testing metrics, F1 score, Recall, Precision. They also used a simple regression model to compare their results. The metrics they used are MAE and RMSE.
 
+\begin{figure}[h!]
+\centering
+\caption{Sample Results from Li et al.}\label{PG_A1}
+\shorthandoff{=}
+\includegraphics[scale=0.5]{paper/sample_results.png} 
+\shorthandoff{=}
+\end{figure}
+
+
+It appears that their results with ELMO embeddings are much better than pre-trained BERT embeddings. We will also compare different embeddings and models to have such a result.
 
 
 
-
- choosing metrics, and evaluating their results. You
-should also report their results, and what implications their work has
-on your project.
-
-
-
+\newpage
 
 \section{Work Split}
 
