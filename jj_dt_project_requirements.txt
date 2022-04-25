@@ -1,0 +1,15 @@
+### Requirements
+
+## Basics
+numpy
+pandas
+jupyter
+
+## Plotting
+plotly
+matplotlib
+
+##Machine_Learning
+scikit-learn
+torch
+
