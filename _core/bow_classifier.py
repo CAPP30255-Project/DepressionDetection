@@ -72,7 +72,7 @@ def get_accuracy(dataloader, model):
         for idx, (label, text) in enumerate(dataloader):
             model.zero_grad()
             log_probs = model(text)
-            _, preds = nn.max(log_probs, 1)
+            _, preds = torch.max(log_probs, 1)
             correct = sum(preds == label).sum().item()
             total = len(label)
             return 100 * correct / total
