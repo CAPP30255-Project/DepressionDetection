@@ -1,10 +1,11 @@
 from torch import nn
 import torch.nn.functional as F
 import time
+import matplotlib.pyplot as plt
 
 class BoWClassifier(nn.Module):
 
-    def __init__(self, num_labels, vocab_size):
+    def __init__(self, vocab_size, num_labels = 2):
         super(BoWClassifier, self).__init__()
         self.linear = nn.Linear(vocab_size, num_labels)
         
@@ -26,30 +27,46 @@ def train_an_epoch(dataloader, model, optimizer, loss_fn, verbose = True):
     for idx, (label, text) in enumerate(dataloader):
         model.zero_grad()
         log_probs = model(text)
-        loss = loss_function(log_probs, label)
+        loss = loss_fn(log_probs, label)
         loss.backward()
         optimizer.step()
         if idx % log_interval == 0 and idx > 0 and verbose:
             print(f'At iteration {idx} the loss is {loss:.3f}.')
 
-def train_BOW(dataloader, 
+def train_BOW(data_object, 
                 model, 
                 verbose = True, 
                 loss_fn = nn.NLLLoss(),
                 optimizer = "adam",
-                learning_rate = 0.01):
+                learning_rate = 0.,
+                epochs = 16):
 
     optimizer = nn.optim.Adam(model.parameters(), lr=0.001)
+    loss_function = nn.NLLLoss()
     accuracies=[]
-    for epoch in range(1, EPOCHS + 1):
-        epoch_start_time = time.time()
-        train_an_epoch(train_dataloader)
-        accuracy = get_accuracy(valid_dataloader)
+
+    for epoch in range(1, epochs + 1):
+        model = BoWClassifier(vocab_size = len(data_object.all_data))
+        train_an_epoch(dataloader = data_object.bow_train_dl,
+                        model = model,
+                        optimizer = optimizer, 
+                        loss_fn=loss_function)
+        accuracy = get_accuracy(data_object.bow_valid_dl, model)
         accuracies.append(accuracy)
-        time_taken = time.time() - epoch_start_time
         print()
         print(f'After epoch {epoch} the validation accuracy is {accuracy:.3f}.')
         print()
         
-    plt.plot(range(1, EPOCHS+1), accuracies)
-    
+    plt.plot(range(1, epochs+1), accuracies)
+
+def get_accuracy(dataloader, model):
+    model.eval()
+    with nn.no_grad():
+        
+        for idx, (label, text) in enumerate(dataloader):
+            model.zero_grad()
+            log_probs = model(text)
+            _, preds = nn.max(log_probs, 1)
+            correct = sum(preds == label).sum().item()
+            total = len(label)
+            return 100 * correct / total
