@@ -58,7 +58,7 @@ def train_BOW(data_object,
                         model = model,
                         optimizer = optimizer, 
                         loss_fn=loss_function,
-                        using_GPU)
+                        using_GPU = using_GPU)
         accuracy = get_accuracy(data_object.bow_valid_dl, model)
         accuracies.append(accuracy)
         print()
