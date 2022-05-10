@@ -12,6 +12,7 @@ matplotlib
 ##Machine_Learning
 scikit-learn
 torch
+torchtext==0.9.1
 
 ##NLP
 nltk

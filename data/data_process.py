@@ -1,7 +1,7 @@
 import pandas as pd
 import csv
-from nltk.tokenize import WordPunctTokenizer
-import spacy
+from nltk.tokenize import WordPunctTokenizer, word_tokenize
+import string
 
 def read_experiment_file(filename, pandas = False, tokenizer = None):
         """
@@ -23,11 +23,10 @@ def read_experiment_file(filename, pandas = False, tokenizer = None):
                 line = line[1:]
                 if tokenizer == "split":
                     line[0] = line[0].split()
-                    line[0] = [word.lower() for word in line[0]]
+                    line[0] = [word.lower() for word in line[0] if word not in string.punctuation]
                 elif tokenizer == "NLTK":
-                    tk_object = WordPunctTokenizer()
-                    line[0] = tk_object.tokenize(line[0])
-                    line[0] = [word.lower() for word in line[0]]
+                    line[0] = word_tokenize(line[0])
+                    line[0] = [word.lower() for word in line[0] if word not in string.punctuation]
                 data.append(line)
         f.close()
         return data, len(data)
