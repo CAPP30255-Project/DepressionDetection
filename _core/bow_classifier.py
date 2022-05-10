@@ -2,6 +2,7 @@ from torch import nn
 import torch.nn.functional as F
 import time
 import matplotlib.pyplot as plt
+import torch.optim as optim
 
 class BoWClassifier(nn.Module):
 
@@ -40,7 +41,7 @@ def train_BOW(data_object,
                 learning_rate = 0.,
                 epochs = 16):
 
-    optimizer = nn.optim.Adam(model.parameters(), lr=0.001)
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
     loss_function = nn.NLLLoss()
     accuracies=[]
 
