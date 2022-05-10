@@ -41,12 +41,13 @@ def train_BOW(data_object,
                 learning_rate = 0.,
                 epochs = 16):
 
+    model = BoWClassifier(vocab_size = len(data_object.all_data))
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     loss_function = nn.NLLLoss()
     accuracies=[]
 
     for epoch in range(1, epochs + 1):
-        model = BoWClassifier(vocab_size = len(data_object.all_data))
+        
         train_an_epoch(dataloader = data_object.bow_train_dl,
                         model = model,
                         optimizer = optimizer, 
