@@ -34,7 +34,6 @@ def train_an_epoch(dataloader, model, optimizer, loss_fn, verbose = True):
             print(f'At iteration {idx} the loss is {loss:.3f}.')
 
 def train_BOW(data_object, 
-                model, 
                 verbose = True, 
                 loss_fn = nn.NLLLoss(),
                 optimizer = "adam",
