@@ -25,8 +25,7 @@ def train_an_epoch(dataloader, model, optimizer, loss_fn, using_GPU, verbose = T
     model.train() 
     log_interval = 500
 
-    if using_GPU:
-        dataloader.to('cuda')
+    
 
     for idx, (label, text) in enumerate(dataloader):
         model.zero_grad()
