@@ -40,4 +40,16 @@ def train_BOW(dataloader,
                 learning_rate = 0.01):
 
     optimizer = nn.optim.Adam(model.parameters(), lr=0.001)
+    accuracies=[]
+    for epoch in range(1, EPOCHS + 1):
+        epoch_start_time = time.time()
+        train_an_epoch(train_dataloader)
+        accuracy = get_accuracy(valid_dataloader)
+        accuracies.append(accuracy)
+        time_taken = time.time() - epoch_start_time
+        print()
+        print(f'After epoch {epoch} the validation accuracy is {accuracy:.3f}.')
+        print()
+        
+    plt.plot(range(1, EPOCHS+1), accuracies)
     
