@@ -25,8 +25,6 @@ def train_an_epoch(dataloader, model, optimizer, loss_fn, using_GPU, verbose = T
     model.train() 
     log_interval = 500
 
-    
-
     for idx, (label, text) in enumerate(dataloader):
         model.zero_grad()
         log_probs = model(text)
@@ -58,7 +56,7 @@ def train_BOW(data_object,
                         optimizer = optimizer, 
                         loss_fn=loss_function,
                         using_GPU = using_GPU)
-        accuracy = get_accuracy(data_object.bow_valid_dl, model)
+        accuracy = get_accuracy(data_object.bow_val_dl, model)
         accuracies.append(accuracy)
         print()
         print(f'After epoch {epoch} the validation accuracy is {accuracy:.3f}.')
