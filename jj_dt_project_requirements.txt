@@ -13,3 +13,7 @@ matplotlib
 scikit-learn
 torch
 
+##NLP
+nltk
+spacy==2.2.2
+
