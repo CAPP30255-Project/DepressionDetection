@@ -2,7 +2,7 @@
 
 # 1. First check to see if the correct version of Python is installed on the local machine
 echo "1. Checking Python version..."
-REQ_PYTHON_V="390"
+REQ_PYTHON_V="380"
 
 ACTUAL_PYTHON_V=$(python -c 'import sys; version=sys.version_info[:3]; print("{0}{1}{2}".format(*version))')
 ACTUAL_PYTHON3_V=$(python3 -c 'import sys; version=sys.version_info[:3]; print("{0}{1}{2}".format(*version))')
