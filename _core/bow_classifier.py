@@ -41,7 +41,7 @@ def train_BOW(data_object,
                 learning_rate = 0.,
                 epochs = 16):
 
-    model = BoWClassifier(vocab_size = len(data_object.all_data))
+    model = BoWClassifier(vocab_size = 138543)
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     loss_function = nn.NLLLoss()
     accuracies=[]
