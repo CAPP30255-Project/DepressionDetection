@@ -19,11 +19,14 @@ class BoWClassifier(nn.Module):
 
 
 
-def train_an_epoch(dataloader, model, optimizer, loss_fn, verbose = True):
+def train_an_epoch(dataloader, model, optimizer, loss_fn, using_GPU, verbose = True):
     
     
     model.train() 
     log_interval = 500
+
+    if using_GPU:
+        dataloader.to('cuda')
 
     for idx, (label, text) in enumerate(dataloader):
         model.zero_grad()
@@ -48,14 +51,14 @@ def train_BOW(data_object,
     if using_GPU:
         model.cuda()
         loss_function.to('cuda')
-        data_object.to('cuda')
     accuracies=[]
     for epoch in range(1, epochs + 1):
         
         train_an_epoch(dataloader = data_object.bow_train_dl,
                         model = model,
                         optimizer = optimizer, 
-                        loss_fn=loss_function)
+                        loss_fn=loss_function,
+                        using_GPU)
         accuracy = get_accuracy(data_object.bow_valid_dl, model)
         accuracies.append(accuracy)
         print()
