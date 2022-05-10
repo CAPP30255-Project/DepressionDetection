@@ -48,7 +48,7 @@ def train_BOW(data_object,
     if using_GPU:
         model.cuda()
         loss_function.to('cuda')
-   
+        data_object.to('cuda')
     accuracies=[]
     for epoch in range(1, epochs + 1):
         
