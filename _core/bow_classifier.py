@@ -1,4 +1,5 @@
 from torch import nn
+import torch
 import torch.nn.functional as F
 import time
 import matplotlib.pyplot as plt
@@ -66,7 +67,7 @@ def train_BOW(data_object,
 
 def get_accuracy(dataloader, model):
     model.eval()
-    with nn.no_grad():
+    with torch.no_grad():
         
         for idx, (label, text) in enumerate(dataloader):
             model.zero_grad()
