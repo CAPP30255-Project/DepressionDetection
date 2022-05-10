@@ -39,13 +39,18 @@ def train_BOW(data_object,
                 loss_fn = nn.NLLLoss(),
                 optimizer = "adam",
                 learning_rate = 0.,
-                epochs = 16):
+                epochs = 16,
+                using_GPU = True):
 
     model = BoWClassifier(vocab_size = 138543)
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     loss_function = nn.NLLLoss()
+    if using_GPU:
+        model.cuda()
+        optimizer.cuda()
+        loss_function.cuda()
+   
     accuracies=[]
-
     for epoch in range(1, epochs + 1):
         
         train_an_epoch(dataloader = data_object.bow_train_dl,
