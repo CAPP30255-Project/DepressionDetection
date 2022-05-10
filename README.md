@@ -7,5 +7,5 @@
 
 ## Instructions
 
-2. Install the dataset using the following link `https://www.kaggle.com/code/abhijitsingh001/suicidal-thought-detection
+2. Install the dataset using the following link https://www.kaggle.com/datasets/nikhileswarkomati/suicide-watch
 
