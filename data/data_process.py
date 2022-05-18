@@ -9,6 +9,9 @@ from sklearn.utils import shuffle
 from torchtext.vocab import GloVe
 from sklearn.model_selection import train_test_split
 
+
+GLOVE_PATH = "data/glove.840B.300d.txt"
+
 def read_experiment_file(filename, pandas = False, tokenizer = None):
     """
     Static method to read file
@@ -101,13 +104,14 @@ class dep_data():
 
         return labels, texts
 
-    def load_glove_embeddings(self, glove, batch_size):
+    def load_glove_embeddings(self, batch_size = 32):
         
+        word2idx, idx2word = get_word2idx_idx2word(self.all_data)
+        glove_embeddings = get_embedding_matrix(GLOVE_PATH, word2idx)
         
-        #train
-        self.bow_train_glove = data_loader_bow_glove([self.train, glove], batch_size, shuffle = False)
-        self.bow_test_glove = data_loader_bow_glove([self.test, glove], batch_size, shuffle = False)
-        self.bow_val_glove = data_loader_bow_glove([self.val, glove], batch_size, shuffle = False)
+        self.bow_train_glove = data_loader_bow_glove([self.train, glove_embeddings], batch_size, shuffle = False)
+        self.bow_test_glove = data_loader_bow_glove([self.test, glove_embeddings], shuffle = False)
+        self.bow_val_glove = data_loader_bow_glove([self.val, glove_embeddings], shuffle = False)
 
 
 

@@ -93,7 +93,7 @@ def get_word2idx_idx2word(vocab):
             idx2word[assigned_index] = w
     return word2idx, idx2word
 
-def get_embedding_matrix(glove_path, word2idx, idx2word, normalization=False):
+def get_embedding_matrix(glove_path, word2idx, normalization=False):
     """
     assume padding index is 0
     :param word2idx: a dictionary: string --> int, includes <PAD> and <UNK>
@@ -117,34 +117,13 @@ def get_embedding_matrix(glove_path, word2idx, idx2word, normalization=False):
                 vector = vector / np.linalg.norm(vector)
             assert len(vector) == embedding_dim
             glove_vectors[word] = vector
-
-    print("Number of pre-trained word vectors loaded: ", len(glove_vectors))
-
-    # Calculate mean and stdev of embeddings
     all_embeddings = np.array(list(glove_vectors.values()))
     embeddings_mean = float(np.mean(all_embeddings))
     embeddings_stdev = float(np.std(all_embeddings))
-    print("Embeddings mean: ", embeddings_mean)
-    print("Embeddings stdev: ", embeddings_stdev)
+    glove_vectors["<UNK>"] = np.random.normal(embeddings_mean, embeddings_stdev, embedding_dim)
+    return glove_vectors
 
-    # Randomly initialize an embedding matrix of (vocab_size, embedding_dim) shape
-    # with a similar distribution as the pretrained embeddings for words in vocab.
-    vocab_size = len(word2idx)
-    embedding_matrix = torch.FloatTensor(vocab_size, embedding_dim).normal_(embeddings_mean, embeddings_stdev)
-    # Go through the embedding matrix and replace the random vector with a
-    # pretrained one if available. Start iteration at 2 since 0, 1 are PAD, UNK
-    for i in range(2, vocab_size):
-        word = idx2word[i]
-        if word in glove_vectors:
-            embedding_matrix[i] = torch.FloatTensor(glove_vectors[word])
-    if normalization:
-        for i in range(vocab_size):
-            embedding_matrix[i] = embedding_matrix[i] / float(np.linalg.norm(embedding_matrix[i]))
-    embeddings = nn.Embedding(vocab_size, embedding_dim, padding_idx=0)
-    embeddings.weight = nn.Parameter(embedding_matrix)
-    return embeddings
-
-def embed_glove_words(words, word2idx, glove_embeddings):
+def embed_glove_words(words, glove_embeddings):
     """
     Assume that word2idx has 1 mapped to UNK
     Assume that word2idx maps well implicitly with glove_embeddings
@@ -161,41 +140,37 @@ def embed_glove_words(words, word2idx, glove_embeddings):
 
     # 1. embed the sequence by glove vector
     # Replace words with tokens, and 1 (UNK index) if words not indexed.
-    indexed_sequence = []
-    for x in words:
-        if x != "i":
-            indexed_sequence.append(word2idx.get(x, 1))
-        else:
-            indexed_sequence.append(1)
+    #indexed_sequence = []
+    #for x in words:
+    #    if x != "i":
+    #        indexed_sequence.append(word2idx.get(x, 1))
+    #    else:
+    #        indexed_sequence.append(1)
    
     # glove_part has shape: (seq_len, glove_dim)
-    
-    variable = Variable(torch.LongTensor(indexed_sequence))
-    print(variable)
-    for i, word in enumerate(indexed_sequence):
-        print(words[i])
-        print("*-*-")
-        print(word)
-        glove_part = glove_embeddings(Variable(torch.LongTensor(word)))
-    
-    # concatenate three parts: glove+elmo+suffix along axis 1
-    # glove_part and suffix_part are Variables, so we need to use .data
-    # otherwise, throws weird ValueError: incorrect dimension, zero-dimension, etc..
-    
-    return glove_part
+    embeddings = []
+    for i, word in enumerate(words):
+        embedding = glove_embeddings.get(word, glove_embeddings["<UNK>"])
+        embeddings.append(embedding) 
+    return torch.from_numpy(np.array(embeddings))
 
-##################################################################
+def embed_data(data, glove):
+    embedded = []
+    for words, label in data:
+        embeddings = embed_glove_words(words, glove)
+        embedded.append([embeddings, label])
+    return embedded
+
 
 ## Glove with Torchtext (Bag of Words)
 
-def collate_into_cbow_glove(object,  device = DEVICE):
-    batch, glove = object
+def collate_into_cbow_glove(object, embedding_dim = 300, device = DEVICE):
+    batch, glove_embeddings = object
     labels = [0] * len(batch)
-    vectors = torch.zeros(len(batch), len(vocab))
-    for index, (words, label) in enumerate(batch):
+    vectors = torch.zeros(len(batch), len(embedding_dim))
+    for index, (word, label) in enumerate(batch):
         labels[index] = LABEL_MAPPINGS[label]
-        glove_embedding = glove.get_vecs_by_tokens(words)
-        vectors[index] = glove_embedding
+        vectors[index] = glove_embeddings.get(word, glove_embeddings["<UNK>"])
     labels = torch.tensor(labels)
     return labels.to(device), vectors.to(device)
     
