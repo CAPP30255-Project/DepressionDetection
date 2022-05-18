@@ -101,8 +101,8 @@ class dep_data():
 
         return labels, texts
 
-    def load_glove_embeddings(self):
-        glove = GloVe(name = "6B")
+    def load_glove_embeddings(self, glove):
+        
         
         #train
         self.bow_train_glove = []
