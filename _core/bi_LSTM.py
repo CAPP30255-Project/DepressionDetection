@@ -51,16 +51,16 @@ class RNNDepressionClassifier(nn.Module):
     # forward takes an batch of inputs and a
     # List of int with the unpadded length of each example in the batch.
     # input is of shape (batch_size, sequence_length)
-    def forward(self, inputs, lengths):
+    def forward(self, inputs):
         # 1. run LSTM
         # apply dropout to the input
         # Shape of inputs: (batch_size, sequence_length, embedding_dim)
         embedded_input = self.dropout_on_input_to_LSTM(inputs)
         # Sort the embedded inputs by decreasing order of input length.
         # sorted_input shape: (batch_size, sequence_length, embedding_dim)
-        (sorted_input, sorted_lengths, input_unsort_indices, _) = sort_batch_by_length(embedded_input, lengths)
+        (sorted_input, input_unsort_indices, _) = sort_batch_by_length(embedded_input)
         # Pack the sorted inputs with pack_padded_sequence.
-        packed_input = pack_padded_sequence(sorted_input, sorted_lengths.data.tolist(), batch_first=True)
+        packed_input = pack_padded_sequence(sorted_input, batch_first=True)
         # Run the input through the RNN.
         packed_sorted_output, _ = self.rnn(packed_input)
         # Unpack (pad) the input with pad_packed_sequence
