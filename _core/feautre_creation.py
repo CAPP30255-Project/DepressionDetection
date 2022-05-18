@@ -167,7 +167,7 @@ def embed_data(data, glove):
 def collate_into_cbow_glove(object, embedding_dim = 300, device = DEVICE):
     batch, glove_embeddings = object
     labels = [0] * len(batch)
-    vectors = torch.zeros(len(batch), len(embedding_dim))
+    vectors = torch.zeros(len(batch), embedding_dim)
     for index, (word, label) in enumerate(batch):
         labels[index] = LABEL_MAPPINGS[label]
         vectors[index] = glove_embeddings.get(word, glove_embeddings["<UNK>"])
