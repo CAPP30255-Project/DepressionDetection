@@ -15,6 +15,7 @@ import mmap
 import torch.nn as nn
 from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer
 
+
 LABEL_MAPPINGS = {"suicide": 1, "non-suicide": 0}
 DEVICE = 'cuda' # change if working on a CPU
 
@@ -67,7 +68,7 @@ def create_tf_idf(data):
 
     return  torch.tensor(tfidf_wm.toarray())
 
-## Glove Vectors (Reference gao paper)
+## Glove Vectors (Reference gao paper) ## This is not working for now, come back to it later
 
 def get_num_lines(file_path):
     fp = open(file_path, "r+")
@@ -182,3 +183,18 @@ def embed_glove_words(words, word2idx, glove_embeddings):
     # otherwise, throws weird ValueError: incorrect dimension, zero-dimension, etc..
     
     return glove_part
+
+##################################################################
+
+## Glove with Torchtext (Bag of Words)
+
+def collate_into_cbow_glove(batch, device = DEVICE):
+    labels = [0] * len(batch)
+    vectors = torch.zeros(len(batch), len(vocab))
+    for index, (glove_words, label) in enumerate(batch):
+        labels[index] = LABEL_MAPPINGS[label]
+        vectors[index] = glove_words
+    labels = torch.tensor(labels)
+    return labels.to(device), vectors.to(device)
+    
+

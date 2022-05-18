@@ -6,6 +6,7 @@ import numpy as np
 import random
 from _core.feautre_creation import *
 from sklearn.utils import shuffle
+from torchtext.vocab import GloVe
 from sklearn.model_selection import train_test_split
 
 def read_experiment_file(filename, pandas = False, tokenizer = None):
@@ -54,6 +55,10 @@ class dep_data():
         self.tf_idf_test = None
         self.tf_idf_val = None
 
+        self.bow_train_glove = None
+        self.bow_test_glove = None
+        self.bow_val_glove = None
+
 
 
 
@@ -95,6 +100,28 @@ class dep_data():
             texts.append(text)
 
         return labels, texts
+
+    def load_glove_embeddings(self):
+        glove = GloVe(name = "6B")
+        
+        #train
+        self.bow_train_glove = []
+        for (words, label) in self.train:
+            glove_embedding = glove.get_vecs_by_tokens(words)
+            self.bow_train_glove.append(glove_embedding, label)
+        
+        self.bow_test_glove = []
+        for (words, label) in self.test:
+            glove_embedding = glove.get_vecs_by_tokens(words)
+            self.bow_test_glove.append(glove_embedding, label)
+        
+        self.bow_val_glove = []
+        for (words, label) in self.val:
+            glove_embedding = glove.get_vecs_by_tokens(words)
+            self.bow_val_glove.append(glove_embedding, label)
+
+
+
 
 
     
