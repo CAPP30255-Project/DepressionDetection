@@ -1,6 +1,6 @@
 import torch.nn as nn
 import torch.nn.functional as F
-from allennlp.nn.util import last_dim_softmax
+from allennlp.nn.util import sort_batch_by_length, masked_softmax
 from torch.nn.utils.rnn import pack_padded_sequence
 from torch.nn.utils.rnn import pad_packed_sequence
 import torch
@@ -58,16 +58,17 @@ class RNNDepressionClassifier(nn.Module):
         embedded_input = self.dropout_on_input_to_LSTM(inputs)
         # Sort the embedded inputs by decreasing order of input length.
         # sorted_input shape: (batch_size, sequence_length, embedding_dim)
-        #(sorted_input, sorted_lengths, input_unsort_indices, _) = sort_batch_by_length(embedded_input, lengths)
+        (sorted_input, sorted_lengths, input_unsort_indices, _) = sort_batch_by_length(embedded_input, lengths)
         # Pack the sorted inputs with pack_padded_sequence.
-        packed_input = pack_padded_sequence(embedded_input, lengths.data.tolist(), batch_first=True)
+        packed_input = pack_padded_sequence(sorted_input, sorted_lengths.data.tolist(), batch_first=True)
         # Run the input through the RNN.
-        packed_output, _ = self.rnn(packed_input)
+        packed_sorted_output, _ = self.rnn(packed_input)
         # Unpack (pad) the input with pad_packed_sequence
         # Shape: (batch_size, sequence_length, hidden_size)
-        output, _ = pad_packed_sequence(packed_output, batch_first=True)
+        sorted_output, _ = pad_packed_sequence(packed_sorted_output, batch_first=True)
         # Re-sort the packed sequence to restore the initial ordering
         # Shape: (batch_size, sequence_length, hidden_size)
+        output = sorted_output[input_unsort_indices]
 
         # 2. use attention
         # Shape: (batch_size, sequence_length, 1)
@@ -76,8 +77,8 @@ class RNNDepressionClassifier(nn.Module):
         mask_attention_logits = (attention_logits != 0).type(
             torch.cuda.FloatTensor if inputs.is_cuda else torch.FloatTensor)
         # Shape: (batch_size, sequence_length)
-        softmax_attention_logits = last_dim_softmax(attention_logits, mask_attention_logits)
-        #softmax_attention_logits = masked_softmax(attention_logits, mask_attention_logits)
+        # softmax_attention_logits = last_dim_softmax(attention_logits, mask_attention_logits)
+        softmax_attention_logits = masked_softmax(attention_logits, mask_attention_logits)
         # Shape: (batch_size, 1, sequence_length)
         softmax_attention_logits = softmax_attention_logits.unsqueeze(dim=1)
         # Shape of input_encoding: (batch_size, 1, hidden_size )
