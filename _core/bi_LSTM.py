@@ -58,18 +58,15 @@ class RNNDepressionClassifier(nn.Module):
         embedded_input = self.dropout_on_input_to_LSTM(inputs)
         # Sort the embedded inputs by decreasing order of input length.
         # sorted_input shape: (batch_size, sequence_length, embedding_dim)
-        (sorted_input, input_unsort_indices, _) = sort_batch_by_length(embedded_input)
         # Pack the sorted inputs with pack_padded_sequence.
-        packed_input = pack_padded_sequence(sorted_input, batch_first=True)
+        packed_input = pack_padded_sequence(embedded_input, batch_first=True)
         # Run the input through the RNN.
         packed_sorted_output, _ = self.rnn(packed_input)
         # Unpack (pad) the input with pad_packed_sequence
         # Shape: (batch_size, sequence_length, hidden_size)
-        sorted_output, _ = pad_packed_sequence(packed_sorted_output, batch_first=True)
+        output, _ = pad_packed_sequence(packed_sorted_output, batch_first=True)
         # Re-sort the packed sequence to restore the initial ordering
         # Shape: (batch_size, sequence_length, hidden_size)
-        output = sorted_output[input_unsort_indices]
-
         # 2. use attention
         # Shape: (batch_size, sequence_length, 1)
         # Shape: (batch_size, sequence_length) after squeeze
