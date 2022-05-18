@@ -110,8 +110,8 @@ class dep_data():
         glove_embeddings = get_embedding_matrix(GLOVE_PATH, word2idx)
         
         self.bow_train_glove = data_loader_bow_glove([self.train, glove_embeddings], batch_size, shuffle = False)
-        self.bow_test_glove = data_loader_bow_glove([self.test, glove_embeddings], shuffle = False)
-        self.bow_val_glove = data_loader_bow_glove([self.val, glove_embeddings], shuffle = False)
+        self.bow_test_glove = data_loader_bow_glove([self.test, glove_embeddings],batch_size, shuffle = False)
+        self.bow_val_glove = data_loader_bow_glove([self.val, glove_embeddings], batch_size,shuffle = False)
 
 
 
