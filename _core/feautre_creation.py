@@ -164,7 +164,7 @@ def embed_data(data, glove):
 
 ## Glove with Torchtext (Bag of Words)
 
-def collate_into_cbow_glove(object, vocab, embedding_dim = 300, device = DEVICE):
+def collate_into_cbow_glove(object, embedding_dim = 300, device = DEVICE):
     batch, glove_embeddings = object
     labels = [0] * len(batch)
     vocab_size = len(vocab)
