@@ -182,9 +182,9 @@ def data_loader_bow_glove(object, batch_size, shuffle = False):
     data, glove = object
     vocab = bow_classifier(data)
 
-    object = data, glove, vocab
+    object2 = data, glove, vocab
     
-    dataloader = DataLoader(object, 
+    dataloader = DataLoader(object2, 
                             batch_size=batch_size, 
                             shuffle=shuffle, 
                             collate_fn=collate_into_cbow_glove)
