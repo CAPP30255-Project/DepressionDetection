@@ -108,17 +108,17 @@ class dep_data():
         self.bow_train_glove = []
         for (words, label) in self.train:
             glove_embedding = glove.get_vecs_by_tokens(words)
-            self.bow_train_glove.append(glove_embedding, label)
+            self.bow_train_glove.append([glove_embedding, label])
         
         self.bow_test_glove = []
         for (words, label) in self.test:
             glove_embedding = glove.get_vecs_by_tokens(words)
-            self.bow_test_glove.append(glove_embedding, label)
+            self.bow_test_glove.append([glove_embedding, label])
         
         self.bow_val_glove = []
         for (words, label) in self.val:
             glove_embedding = glove.get_vecs_by_tokens(words)
-            self.bow_val_glove.append(glove_embedding, label)
+            self.bow_val_glove.append([glove_embedding, label])
 
 
 
