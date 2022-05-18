@@ -59,12 +59,10 @@ class RNNDepressionClassifier(nn.Module):
         # Sort the embedded inputs by decreasing order of input length.
         # sorted_input shape: (batch_size, sequence_length, embedding_dim)
         # Pack the sorted inputs with pack_padded_sequence.
-        packed_input = pack_padded_sequence(embedded_input, batch_first=True)
         # Run the input through the RNN.
-        packed_sorted_output, _ = self.rnn(packed_input)
+        output, _ = self.rnn(embedded_input)
         # Unpack (pad) the input with pad_packed_sequence
         # Shape: (batch_size, sequence_length, hidden_size)
-        output, _ = pad_packed_sequence(packed_sorted_output, batch_first=True)
         # Re-sort the packed sequence to restore the initial ordering
         # Shape: (batch_size, sequence_length, hidden_size)
         # 2. use attention
