@@ -126,7 +126,10 @@ def train_biLSTM(data_object,
                 using_GPU = True,
                 glove = False):
 
-    model = RNNDepressionClassifier(vocab_size = 138543)
+    model = RNNDepressionClassifier(num_classes = num_classes, 
+                                    embedding_dim = embedding_dim, 
+                                    hidden_size = hidden_size, 
+                                    num_layers = num_layers)
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     loss_function = nn.NLLLoss()
     if using_GPU:
