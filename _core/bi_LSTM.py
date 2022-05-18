@@ -1,6 +1,6 @@
 import torch.nn as nn
 import torch.nn.functional as F
-from allennlp.nn.util import masked_softmax
+from allennlp.nn.util import sort_batch_by_length, masked_softmax
 from torch.nn.utils.rnn import pack_padded_sequence
 from torch.nn.utils.rnn import pad_packed_sequence
 import torch
@@ -58,9 +58,9 @@ class RNNDepressionClassifier(nn.Module):
         embedded_input = self.dropout_on_input_to_LSTM(inputs)
         # Sort the embedded inputs by decreasing order of input length.
         # sorted_input shape: (batch_size, sequence_length, embedding_dim)
-        #(sorted_input, sorted_lengths, input_unsort_indices, _) = sort_batch_by_length(embedded_input, lengths)
+        (sorted_input, sorted_lengths, input_unsort_indices, _) = sort_batch_by_length(embedded_input, lengths)
         # Pack the sorted inputs with pack_padded_sequence.
-        packed_input = pack_padded_sequence(embedded_input, lengths.data.tolist(), batch_first=True)
+        packed_input = pack_padded_sequence(sorted_input, sorted_lengths.data.tolist(), batch_first=True)
         # Run the input through the RNN.
         packed_sorted_output, _ = self.rnn(packed_input)
         # Unpack (pad) the input with pad_packed_sequence
