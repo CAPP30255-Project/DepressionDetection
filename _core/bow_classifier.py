@@ -41,7 +41,8 @@ def train_BOW(data_object,
                 optimizer = "adam",
                 learning_rate = 0.,
                 epochs = 16,
-                using_GPU = True):
+                using_GPU = True,
+                glove = False):
 
     model = BoWClassifier(vocab_size = 138543)
     optimizer = optim.Adam(model.parameters(), lr=0.001)
@@ -51,13 +52,21 @@ def train_BOW(data_object,
         loss_function.to('cuda')
     accuracies=[]
     for epoch in range(1, epochs + 1):
-        
-        train_an_epoch(dataloader = data_object.bow_train_dl,
+        if glove:
+            train_an_epoch(dataloader = data_object.bow_train_glove,
                         model = model,
                         optimizer = optimizer, 
                         loss_fn=loss_function,
                         using_GPU = using_GPU)
-        accuracy = get_accuracy(data_object.bow_val_dl, model)
+            accuracy = get_accuracy(data_object.bow_val_glove, model)
+        else:
+            train_an_epoch(dataloader = data_object.bow_train_dl,
+                            model = model,
+                            optimizer = optimizer, 
+                            loss_fn=loss_function,
+                            using_GPU = using_GPU)
+            accuracy = get_accuracy(data_object.bow_val_dl, model)
+        
         accuracies.append(accuracy)
         print()
         print(f'After epoch {epoch} the validation accuracy is {accuracy:.3f}.')
