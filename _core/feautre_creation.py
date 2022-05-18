@@ -188,7 +188,8 @@ def embed_glove_words(words, word2idx, glove_embeddings):
 
 ## Glove with Torchtext (Bag of Words)
 
-def collate_into_cbow_glove(batch, device = DEVICE):
+def collate_into_cbow_glove(object,  device = DEVICE):
+    batch, glove = object
     labels = [0] * len(batch)
     vectors = torch.zeros(len(batch), len(vocab))
     for index, (words, label) in enumerate(batch):
