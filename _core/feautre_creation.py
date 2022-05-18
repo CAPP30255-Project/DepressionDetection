@@ -200,7 +200,8 @@ def collate_into_cbow_glove(object,  device = DEVICE):
     return labels.to(device), vectors.to(device)
     
 
-def data_loader_bow_glove(data, batch_size, shuffle = False):
+def data_loader_bow_glove(object, batch_size, shuffle = False):
+    data, _ = object
     vocab = bow_classifier(data)
     dataloader = DataLoader(data, 
                             batch_size=batch_size, 
