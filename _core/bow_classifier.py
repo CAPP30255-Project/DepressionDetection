@@ -53,7 +53,7 @@ def train_BOW(data_object,
     accuracies=[]
     for epoch in range(1, epochs + 1):
         if glove:
-            train_an_epoch(dataloader = data_object.bow_train_glove,
+            train_an_epoch(dataloader = data_object,
                         model = model,
                         optimizer = optimizer, 
                         loss_fn=loss_function,
