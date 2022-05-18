@@ -172,7 +172,7 @@ def collate_into_cbow_glove(object, embedding_dim = 300, device = DEVICE):
     for index, (word, label) in enumerate(batch):
         labels[index] = LABEL_MAPPINGS[label]
         for w in word:
-            index_word = vocab[word]    
+            index_word = vocab[w]    
             vectors[index, int(index_word)]= glove_embeddings.get(w, glove_embeddings["<UNK>"])
     labels = torch.tensor(labels)
     return labels.to(device), vectors.to(device)
