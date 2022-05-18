@@ -164,13 +164,16 @@ def embed_data(data, glove):
 
 ## Glove with Torchtext (Bag of Words)
 
-def collate_into_cbow_glove(object, embedding_dim = 300, device = DEVICE):
+def collate_into_cbow_glove(object, vocab, embedding_dim = 300, device = DEVICE):
     batch, glove_embeddings = object
     labels = [0] * len(batch)
-    vectors = torch.zeros(len(batch), embedding_dim)
+    vocab_size = len(vocab)
+    vectors = torch.zeros(len(batch), vocab_size, embedding_dim)
     for index, (word, label) in enumerate(batch):
         labels[index] = LABEL_MAPPINGS[label]
-        vectors[index] = glove_embeddings.get(word, glove_embeddings["<UNK>"])
+        for w in word:
+            index_word = vocab[word]    
+            vectors[index, int(index_word)]= glove_embeddings.get(w, glove_embeddings["<UNK>"])
     labels = torch.tensor(labels)
     return labels.to(device), vectors.to(device)
     
