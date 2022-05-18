@@ -101,24 +101,13 @@ class dep_data():
 
         return labels, texts
 
-    def load_glove_embeddings(self, glove):
+    def load_glove_embeddings(self, batch_size):
         
         
         #train
-        self.bow_train_glove = []
-        for (words, label) in self.train:
-            glove_embedding = glove.get_vecs_by_tokens(words)
-            self.bow_train_glove.append([glove_embedding, label])
-        
-        self.bow_test_glove = []
-        for (words, label) in self.test:
-            glove_embedding = glove.get_vecs_by_tokens(words)
-            self.bow_test_glove.append([glove_embedding, label])
-        
-        self.bow_val_glove = []
-        for (words, label) in self.val:
-            glove_embedding = glove.get_vecs_by_tokens(words)
-            self.bow_val_glove.append([glove_embedding, label])
+        self.bow_train_glove = data_loader_bow_glove(self.train, batch_size, shuffle = False)
+        self.bow_test_glove = data_loader_bow_glove(self.test, batch_size, shuffle = False)
+        self.bow_val_glove = data_loader_bow_glove(self.val, batch_size, shuffle = False)
 
 
 

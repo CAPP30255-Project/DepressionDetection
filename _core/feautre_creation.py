@@ -191,10 +191,18 @@ def embed_glove_words(words, word2idx, glove_embeddings):
 def collate_into_cbow_glove(batch, device = DEVICE):
     labels = [0] * len(batch)
     vectors = torch.zeros(len(batch), len(vocab))
-    for index, (glove_words, label) in enumerate(batch):
+    for index, (words, label) in enumerate(batch):
         labels[index] = LABEL_MAPPINGS[label]
-        vectors[index] = glove_words
+        glove_embedding = glove.get_vecs_by_tokens(words)
+        vectors[index] = glove_embedding
     labels = torch.tensor(labels)
     return labels.to(device), vectors.to(device)
     
 
+def data_loader_bow_glove(data, batch_size, shuffle = False):
+    vocab = bow_classifier(data)
+    dataloader = DataLoader(data, 
+                            batch_size=batch_size, 
+                            shuffle=shuffle, 
+                            collate_fn=collate_into_cbow_glove)
+    return dataloader
