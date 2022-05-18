@@ -166,6 +166,7 @@ def embed_data(data, glove):
 
 def collate_into_cbow_glove(object, embedding_dim = 300, device = DEVICE):
     batch, glove_embeddings, vocab = object
+    print(vocab)
     labels = [0] * len(batch)
     vocab_size = len(vocab)
     vectors = torch.zeros(len(batch), vocab_size, embedding_dim)
