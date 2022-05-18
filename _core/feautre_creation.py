@@ -201,6 +201,8 @@ def collate_into_cbow_glove(object,  device = DEVICE):
     
 
 def data_loader_bow_glove(object, batch_size, shuffle = False):
+    data, _ = object
+    vocab = bow_classifier(data)
     dataloader = DataLoader(object, 
                             batch_size=batch_size, 
                             shuffle=shuffle, 
