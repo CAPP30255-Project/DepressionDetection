@@ -18,4 +18,5 @@ sklearn
 ##NLP
 nltk
 spacy==2.2.2
+allennlp
 
