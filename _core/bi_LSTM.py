@@ -56,8 +56,7 @@ class RNNDepressionClassifier(nn.Module):
         # 1. run LSTM
         # apply dropout to the input
         # Shape of inputs: (batch_size, sequence_length, embedding_dim)
-        print(inputs)
-        embedded_input = self.embedding(inputs)
+        embedded_input = self.embedding(inputs.long())
         embedded_input = self.dropout_on_input_to_LSTM(embedded_input)
         # Sort the embedded inputs by decreasing order of input length.
         # sorted_input shape: (batch_size, sequence_length, embedding_dim)
