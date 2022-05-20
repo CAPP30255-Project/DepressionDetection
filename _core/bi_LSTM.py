@@ -107,6 +107,7 @@ def train_an_epoch(dataloader, model, optimizer, loss_fn, using_GPU, verbose = T
         model.zero_grad()
         log_probs = model(text)
         loss = loss_fn(log_probs, label)
+        optimizer.zero_grad()
         loss.backward()
         optimizer.step()
         if idx % log_interval == 0 and idx > 0 and verbose:
