@@ -29,7 +29,7 @@ def bow_classifier(data):
     vocab = Vocab(counter)
     return vocab, counter
 
-def collate_into_bow(batch, vocab = vocab, device = DEVICE):
+def collate_into_bow(batch, device = DEVICE):
 
     labels = [0] * len(batch)
     vectors = torch.zeros(len(batch), len(vocab))
