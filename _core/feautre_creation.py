@@ -26,7 +26,7 @@ def bow_classifier(data):
     for (line, label) in data:
         counter.update(line)
     global vocab 
-    vocab = Vocab(counter)
+    vocab = Vocab(counter, min_freq=1000)
     return vocab, counter
 
 def collate_into_bow(batch, device = DEVICE):
