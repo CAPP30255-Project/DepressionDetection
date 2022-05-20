@@ -29,7 +29,8 @@ def bow_classifier(data):
     vocab = Vocab(counter)
     return vocab, counter
 
-def collate_into_bow(batch, device = DEVICE):
+def collate_into_bow(batch, vocab = vocab, device = DEVICE):
+
     labels = [0] * len(batch)
     vectors = torch.zeros(len(batch), len(vocab))
     for index, (words, label) in enumerate(batch):
@@ -41,7 +42,6 @@ def collate_into_bow(batch, device = DEVICE):
     return labels.to(device), vectors.to(device)
 
 def data_loader_bow(data, vocab, batch_size, shuffle = False):
-    
     print("Vocab Size = ", len(vocab))
     dataloader = DataLoader(data, 
                             batch_size=batch_size, 
