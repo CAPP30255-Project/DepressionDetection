@@ -15,7 +15,7 @@ class RNNDepressionClassifier(nn.Module):
     # dropout1: dropout on input to RNN
     # dropout2: dropout in RNN
     # dropout3: dropout on hidden state of RNN to linear layer
-    def __init__(self, num_classes, embedding_dim, hidden_size, num_layers, bidir=True,
+    def __init__(self, num_classes, vocab_size, embedding_dim, hidden_size, num_layers, bidir=True,
                  dropout1=0.2, dropout2=0.2, dropout3=0.2):
         # Always call the superclass (nn.Module) constructor first
         super(RNNDepressionClassifier, self).__init__()
@@ -111,6 +111,7 @@ def train_an_epoch(dataloader, model, optimizer, loss_fn, using_GPU, verbose = T
             print(f'At iteration {idx} the loss is {loss:.3f}.')
 
 def train_biLSTM(data_object, 
+                vocab_size,
                 num_classes = 2, 
                 embedding_dim = 300, 
                 hidden_size = 124, 
@@ -123,7 +124,8 @@ def train_biLSTM(data_object,
                 using_GPU = True,
                 glove = False):
 
-    model = RNNDepressionClassifier(num_classes = num_classes, 
+    model = RNNDepressionClassifier(vocab_size = vocab_size,
+                                    num_classes = num_classes, 
                                     embedding_dim = embedding_dim, 
                                     hidden_size = hidden_size, 
                                     num_layers = num_layers)
