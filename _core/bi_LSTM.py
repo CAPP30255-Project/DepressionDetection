@@ -47,7 +47,6 @@ class RNNDepressionClassifier(nn.Module):
         # Dropout layer
         self.dropout_on_input_to_LSTM = nn.Dropout(dropout1)
         self.dropout_on_input_to_linear_layer = nn.Dropout(dropout3)
-        print("dropout")
 
 
 
@@ -60,13 +59,11 @@ class RNNDepressionClassifier(nn.Module):
         # Shape of inputs: (batch_size, sequence_length, embedding_dim)
         embedded_input = self.embedding(inputs.long())
         embedded_input = self.dropout_on_input_to_LSTM(embedded_input)
-        print("embedded")
         # Sort the embedded inputs by decreasing order of input length.
         # sorted_input shape: (batch_size, sequence_length, embedding_dim)
         # Pack the sorted inputs with pack_padded_sequence.
         # Run the input through the RNN.
         output, _ = self.rnn(embedded_input)
-        print("rnn output")
         # Unpack (pad) the input with pad_packed_sequence
         # Shape: (batch_size, sequence_length, hidden_size)
         # Re-sort the packed sequence to restore the initial ordering
@@ -78,7 +75,6 @@ class RNNDepressionClassifier(nn.Module):
         
         mask_attention_logits = (attention_logits != 0).type(
             torch.cuda.FloatTensor if inputs.is_cuda else torch.FloatTensor)
-        print("attention")
         # Shape: (batch_size, sequence_length)
         # softmax_attention_logits = last_dim_softmax(attention_logits, mask_attention_logits)
         softmax_attention_logits = masked_softmax(attention_logits, mask_attention_logits)
@@ -97,7 +93,6 @@ class RNNDepressionClassifier(nn.Module):
         # Run the RNN encoding of the input through the output projection
         # to get scores for each of the classes.
         unnormalized_output = self.output_projection(input_encoding)
-        print("output")
         # Normalize with log softmax
         output_distribution = F.log_softmax(unnormalized_output, dim=-1)
         return output_distribution
