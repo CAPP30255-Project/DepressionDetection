@@ -42,7 +42,7 @@ def collate_into_bow(batch, device = DEVICE):
     return labels.to(device), vectors.to(device)
 
 def data_loader_bow(data, vocab, batch_size, shuffle = False):
-    print(len(vocab))
+    globals()[vocab] = vocab
     print("Vocab Size = ", len(vocab))
     dataloader = DataLoader(data, 
                             batch_size=batch_size, 
