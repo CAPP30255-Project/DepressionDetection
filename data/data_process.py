@@ -91,9 +91,9 @@ class dep_data():
 
     def prep_bow_dataloaders(self, batch_size):
 
-        self.bow_train_dl = data_loader_bow(self.train, self.vocab, batch_size, shuffle = False)
-        self.bow_test_dl = data_loader_bow(self.test, self.vocab, batch_size, shuffle = False)
-        self.bow_val_dl = data_loader_bow(self.val, self.vocab, batch_size, shuffle = False)
+        self.bow_train_dl = data_loader_bow(self.train, self.vocab, batch_size, shuffle = False, data_object=self)
+        self.bow_test_dl = data_loader_bow(self.test, self.vocab, batch_size, shuffle = False, data_object=self
+        self.bow_val_dl = data_loader_bow(self.val, self.vocab, batch_size, shuffle = False, data_object=self)
 
     def split_label_text(self, data):
 
