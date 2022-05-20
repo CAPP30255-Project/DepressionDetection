@@ -32,19 +32,18 @@ class RNNDepressionClassifier(nn.Module):
         self.embedding.weight = nn.Parameter(embedding_matrix)
         """
         self.embedding = nn.Embedding(vocab_size, embedding_dim)
-        print("embedded")
+        
         # Set up the RNN: use an LSTM here.
         # We set batch_first=True because our data is of shape (batch_size, seq_len, num_features)
         self.rnn = nn.LSTM(input_size=embedding_dim, hidden_size=hidden_size,
                            num_layers=num_layers, dropout=dropout2, batch_first=True, bidirectional=bidir)
-        print("rnn output")
         # Affine transform for attention.
         direc = 2 if bidir else 1
         self.attention_weights = nn.Linear(hidden_size * direc, 1)
-        print("attention")
+        
         # Set up the final transform to a distribution over classes.
         self.output_projection = nn.Linear(hidden_size * direc, num_classes)
-        print("output")
+        
         # Dropout layer
         self.dropout_on_input_to_LSTM = nn.Dropout(dropout1)
         self.dropout_on_input_to_linear_layer = nn.Dropout(dropout3)
@@ -61,11 +60,13 @@ class RNNDepressionClassifier(nn.Module):
         # Shape of inputs: (batch_size, sequence_length, embedding_dim)
         embedded_input = self.embedding(inputs.long())
         embedded_input = self.dropout_on_input_to_LSTM(embedded_input)
+        print("embedded")
         # Sort the embedded inputs by decreasing order of input length.
         # sorted_input shape: (batch_size, sequence_length, embedding_dim)
         # Pack the sorted inputs with pack_padded_sequence.
         # Run the input through the RNN.
         output, _ = self.rnn(embedded_input)
+        print("rnn output")
         # Unpack (pad) the input with pad_packed_sequence
         # Shape: (batch_size, sequence_length, hidden_size)
         # Re-sort the packed sequence to restore the initial ordering
@@ -74,8 +75,10 @@ class RNNDepressionClassifier(nn.Module):
         # Shape: (batch_size, sequence_length, 1)
         # Shape: (batch_size, sequence_length) after squeeze
         attention_logits = self.attention_weights(output).squeeze(dim=-1)
+        
         mask_attention_logits = (attention_logits != 0).type(
             torch.cuda.FloatTensor if inputs.is_cuda else torch.FloatTensor)
+        print("attention")
         # Shape: (batch_size, sequence_length)
         # softmax_attention_logits = last_dim_softmax(attention_logits, mask_attention_logits)
         softmax_attention_logits = masked_softmax(attention_logits, mask_attention_logits)
@@ -94,6 +97,7 @@ class RNNDepressionClassifier(nn.Module):
         # Run the RNN encoding of the input through the output projection
         # to get scores for each of the classes.
         unnormalized_output = self.output_projection(input_encoding)
+        print("output")
         # Normalize with log softmax
         output_distribution = F.log_softmax(unnormalized_output, dim=-1)
         return output_distribution
