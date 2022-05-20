@@ -40,8 +40,8 @@ def collate_into_bow(batch, device = DEVICE):
     labels = torch.tensor(labels)
     return labels.to(device), vectors.to(device)
 
-def data_loader_bow(data, batch_size, shuffle = False):
-    vocab = bow_classifier(data)
+def data_loader_bow(data, vocab, batch_size, shuffle = False):
+    
     print("Vocab Size = ", len(vocab[0]))
     dataloader = DataLoader(data, 
                             batch_size=batch_size, 
