@@ -31,6 +31,7 @@ class RNNDepressionClassifier(nn.Module):
         # nn.Parameter is basically a Variable that is part of a Module.
         self.embedding.weight = nn.Parameter(embedding_matrix)
         """
+        self.embedding = nn.Embedding(vocab_size, embedding_dim)
         # Set up the RNN: use an LSTM here.
         # We set batch_first=True because our data is of shape (batch_size, seq_len, num_features)
         self.rnn = nn.LSTM(input_size=embedding_dim, hidden_size=hidden_size,
@@ -40,7 +41,7 @@ class RNNDepressionClassifier(nn.Module):
         direc = 2 if bidir else 1
         self.attention_weights = nn.Linear(hidden_size * direc, 1)
         # Set up the final transform to a distribution over classes.
-        self.output_projection = nn.Linear(hidden_size * direc, num_classes)
+        sexslf.output_projection = nn.Linear(hidden_size * direc, num_classes)
 
         # Dropout layer
         self.dropout_on_input_to_LSTM = nn.Dropout(dropout1)
@@ -55,7 +56,8 @@ class RNNDepressionClassifier(nn.Module):
         # 1. run LSTM
         # apply dropout to the input
         # Shape of inputs: (batch_size, sequence_length, embedding_dim)
-        embedded_input = self.dropout_on_input_to_LSTM(inputs)
+        embedded_input = self.embedding(inputs)
+        embedded_input = self.dropout_on_input_to_LSTM(embedded_input)
         # Sort the embedded inputs by decreasing order of input length.
         # sorted_input shape: (batch_size, sequence_length, embedding_dim)
         # Pack the sorted inputs with pack_padded_sequence.
