@@ -42,13 +42,14 @@ def collate_into_bow(batch, device = DEVICE):
 
 def data_loader_bow(data, batch_size, shuffle = False):
     vocab = bow_classifier(data)
+    print("Vocab Size = ", len(vocab))
     dataloader = DataLoader(data, 
                             batch_size=batch_size, 
                             shuffle=shuffle, 
                             collate_fn=collate_into_bow)
     return dataloader
 
-    
+
     
 ### TF - IDF ###
 

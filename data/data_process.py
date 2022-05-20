@@ -49,6 +49,7 @@ class dep_data():
         self.train = None
         self.test = None
         self.val = None
+        self.vocab_size = None
 
         self.bow_train_dl = None
         self.bow_test_dl = None
@@ -107,6 +108,7 @@ class dep_data():
     def load_glove_embeddings(self, batch_size = 32):
         
         word2idx, idx2word = get_word2idx_idx2word(self.all_data)
+        self.vocab_size = len(word2idx)
         glove_embeddings = get_embedding_matrix(GLOVE_PATH, word2idx)
         
         self.bow_train_glove = data_loader_bow_glove([self.train, glove_embeddings], batch_size, shuffle = False)
