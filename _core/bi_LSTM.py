@@ -41,7 +41,7 @@ class RNNDepressionClassifier(nn.Module):
         direc = 2 if bidir else 1
         self.attention_weights = nn.Linear(hidden_size * direc, 1)
         # Set up the final transform to a distribution over classes.
-        sexslf.output_projection = nn.Linear(hidden_size * direc, num_classes)
+        self.output_projection = nn.Linear(hidden_size * direc, num_classes)
 
         # Dropout layer
         self.dropout_on_input_to_LSTM = nn.Dropout(dropout1)
