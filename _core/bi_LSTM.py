@@ -101,7 +101,7 @@ def train_an_epoch(dataloader, model, optimizer, loss_fn, using_GPU, verbose = T
     
     
     model.train() 
-    log_interval = 50
+    log_interval = 100
 
     for idx, (label, text) in enumerate(dataloader):
         model.zero_grad()
