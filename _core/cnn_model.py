@@ -152,8 +152,7 @@ def train(model, optimizer, train_dataloader, val_dataloader=None, epochs=10):
 
     # Start training loop
     print("Start training...\n")
-    print(f"{'Epoch':^7} | {'Train Loss':^12} | {'Val Loss':^10} | {\
-    'Val Acc':^9} | {'Elapsed':^9}")
+    print(f"{'Epoch':^7} | {'Train Loss':^12} | {'Val Loss':^10} | {'Val Acc':^9} | {'Elapsed':^9}")
     print("-"*60)
 
     for epoch_i in range(epochs):
