@@ -63,7 +63,7 @@ class RNNDepressionClassifier(nn.Module):
         # apply dropout to the input
         # Shape of inputs: (batch_size, sequence_length, embedding_dim)
         print(inputs.shape, 'shape of input')
-        embedded_input = self.embedding(inputs)
+        embedded_input = self.embedding(inputs.long())
         print(embedded_input.shape, 'embedding shape')
         embedded_input = self.dropout_on_input_to_LSTM(embedded_input)
         print(embedded_input.shape, 'embedding shape after dropout')
