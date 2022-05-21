@@ -205,8 +205,7 @@ def train(model, optimizer, train_dataloader, val_dataloader=None, epochs=10):
 
             # Print performance over the entire training data
             time_elapsed = time.time() - t0_epoch
-            print(f"{epoch_i + 1:^7} | {avg_train_loss:^12.6f} | {\
-            val_loss:^10.6f} | {val_accuracy:^9.2f} | {time_elapsed:^9.2f}")
+            print(f"{epoch_i + 1:^7} | {avg_train_loss:^12.6f} | {val_loss:^10.6f} | {val_accuracy:^9.2f} | {time_elapsed:^9.2f}")
             
     print("\n")
     print(f"Training complete! Best accuracy: {best_accuracy:.2f}%.")
