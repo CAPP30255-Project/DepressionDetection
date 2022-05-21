@@ -62,17 +62,17 @@ class RNNDepressionClassifier(nn.Module):
         # 1. run LSTM
         # apply dropout to the input
         # Shape of inputs: (batch_size, sequence_length, embedding_dim)
-        print(inputs.shape, 'shape of input')
+        
         embedded_input = self.embedding(inputs.long())
-        print(embedded_input.shape, 'embedding shape')
+       
         embedded_input = self.dropout_on_input_to_LSTM(embedded_input)
-        print(embedded_input.shape, 'embedding shape after dropout')
+       
         # Sort the embedded inputs by decreasing order of input length.
         # sorted_input shape: (batch_size, sequence_length, embedding_dim)
         # Pack the sorted inputs with pack_padded_sequence.
         # Run the input through the RNN.
         output, _ = self.rnn(embedded_input)
-        print(output.shape, 'output shape')
+       
         # Unpack (pad) the input with pad_packed_sequence
         # Shape: (batch_size, sequence_length, hidden_size)
         # Re-sort the packed sequence to restore the initial ordering
@@ -81,13 +81,13 @@ class RNNDepressionClassifier(nn.Module):
         # Shape: (batch_size, sequence_length, 1)
         # Shape: (batch_size, sequence_length) after squeeze
         attention_logits = self.attention_weights(output).squeeze(dim=-1)
-        print(attention_logits.shape, 'attention_logits shape')
+       
         mask_attention_logits = (attention_logits != 0).type(
             torch.cuda.FloatTensor if inputs.is_cuda else torch.FloatTensor)
         # Shape: (batch_size, sequence_length)
         # softmax_attention_logits = last_dim_softmax(attention_logits, mask_attention_logits)
         softmax_attention_logits = masked_softmax(attention_logits, mask_attention_logits)
-        print(softmax_attention_logits.shape, 'softmax_attention_logits shape')
+       
         # Shape: (batch_size, 1, sequence_length)
         softmax_attention_logits = softmax_attention_logits.unsqueeze(dim=1)
         # Shape of input_encoding: (batch_size, 1, hidden_size )
