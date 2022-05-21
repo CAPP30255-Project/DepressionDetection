@@ -120,10 +120,3 @@ class dep_data():
 
 
 
-embeddings = elmo(
-data.all_data['text'].to_list(),
-signature="default",
-as_dict=True)["elmo"]
-init = tf.initialize_all_variables()
-sess = tf.Session()
-sess.run(init)
