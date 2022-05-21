@@ -89,6 +89,7 @@ class RNNDepressionClassifier(nn.Module):
         # Shape of input_encoding: (batch_size, 1, hidden_size )
         #    output: (batch_size, sequence_length, hidden_size)
         #    softmax_attention_logits: (batch_size, 1, sequence_length)
+        print(softmax_attention_logits.shape)
         input_encoding = torch.bmm(softmax_attention_logits, output)
         # Shape: (batch_size, hidden_size)
         input_encoding = input_encoding.squeeze(dim=1)
