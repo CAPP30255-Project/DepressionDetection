@@ -53,11 +53,14 @@ class RNNDepressionClassifier(nn.Module):
     # forward takes an batch of inputs and a
     # List of int with the unpadded length of each example in the batch.
     # input is of shape (batch_size, sequence_length)
-    def forward(self, inputs):
+    def forward(self, inputs, glove = False):
         # 1. run LSTM
         # apply dropout to the input
         # Shape of inputs: (batch_size, sequence_length, embedding_dim)
-        embedded_input = self.embedding(inputs.long())
+        if not glove:
+            embedded_input = self.embedding(inputs.long())
+        else:
+            embedded_input = inputs
         embedded_input = self.dropout_on_input_to_LSTM(embedded_input)
         # Sort the embedded inputs by decreasing order of input length.
         # sorted_input shape: (batch_size, sequence_length, embedding_dim)
@@ -101,7 +104,7 @@ def train_an_epoch(dataloader, model, optimizer, loss_fn, using_GPU, verbose = T
     
     
     model.train() 
-    log_interval = 100
+    log_interval = 200
 
     for idx, (label, text) in enumerate(dataloader):
         model.zero_grad()
