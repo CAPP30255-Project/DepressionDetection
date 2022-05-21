@@ -16,7 +16,7 @@ class RNNDepressionClassifier(nn.Module):
     # dropout2: dropout in RNN
     # dropout3: dropout on hidden state of RNN to linear layer
     def __init__(self, num_classes, vocab_size, embedding_dim, hidden_size, 
-                num_layers, use_glove = None, bidir=True, freeze_glove = False
+                num_layers, use_glove = None, bidir=True, freeze_glove = False,
                  dropout1=0.2, dropout2=0.2, dropout3=0.2):
         # Always call the superclass (nn.Module) constructor first
         super(RNNDepressionClassifier, self).__init__()
