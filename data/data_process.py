@@ -49,7 +49,8 @@ class dep_data():
         self.train = None
         self.test = None
         self.val = None
-        self.vocab, self.counter = bow_classifier(self.all_data)
+        if not pandas:
+            self.vocab, self.counter = bow_classifier(self.all_data)
 
         self.bow_train_dl = None
         self.bow_test_dl = None
@@ -119,4 +120,10 @@ class dep_data():
 
 
 
-    
+embeddings = elmo(
+data.all_data['text'].to_list(),
+signature="default",
+as_dict=True)["elmo"]
+init = tf.initialize_all_variables()
+sess = tf.Session()
+sess.run(init)
