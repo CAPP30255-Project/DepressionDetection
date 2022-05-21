@@ -15,7 +15,8 @@ class RNNDepressionClassifier(nn.Module):
     # dropout1: dropout on input to RNN
     # dropout2: dropout in RNN
     # dropout3: dropout on hidden state of RNN to linear layer
-    def __init__(self, num_classes, vocab_size, embedding_dim, hidden_size, num_layers, bidir=True,
+    def __init__(self, num_classes, vocab_size, embedding_dim, hidden_size, 
+                num_layers, use_glove = None, bidir=True, freeze_glove = False
                  dropout1=0.2, dropout2=0.2, dropout3=0.2):
         # Always call the superclass (nn.Module) constructor first
         super(RNNDepressionClassifier, self).__init__()
@@ -31,7 +32,11 @@ class RNNDepressionClassifier(nn.Module):
         # nn.Parameter is basically a Variable that is part of a Module.
         self.embedding.weight = nn.Parameter(embedding_matrix)
         """
-        self.embedding = nn.Embedding(vocab_size, embedding_dim)
+        if use_glove:
+            self.embedding = nn.Embedding.from_pretrained(use_glove, freeze_glove)
+        else:
+            self.embedding = nn.Embedding(vocab_size, embedding_dim)
+        
         
         # Set up the RNN: use an LSTM here.
         # We set batch_first=True because our data is of shape (batch_size, seq_len, num_features)
