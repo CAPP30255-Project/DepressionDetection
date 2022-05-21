@@ -32,7 +32,7 @@ class RNNDepressionClassifier(nn.Module):
         # nn.Parameter is basically a Variable that is part of a Module.
         self.embedding.weight = nn.Parameter(embedding_matrix)
         """
-        if use_glove:
+        if use_glove is not None:
             self.embedding = nn.Embedding.from_pretrained(use_glove, freeze_glove)
         else:
             self.embedding = nn.Embedding(vocab_size, embedding_dim)
@@ -58,14 +58,12 @@ class RNNDepressionClassifier(nn.Module):
     # forward takes an batch of inputs and a
     # List of int with the unpadded length of each example in the batch.
     # input is of shape (batch_size, sequence_length)
-    def forward(self, inputs, glove = False):
+    def forward(self, inputs):
         # 1. run LSTM
         # apply dropout to the input
         # Shape of inputs: (batch_size, sequence_length, embedding_dim)
-        if not glove:
-            embedded_input = self.embedding(inputs.long())
-        else:
-            embedded_input = inputs
+        
+        embedded_input = self.embedding(inputs.long())
         embedded_input = self.dropout_on_input_to_LSTM(embedded_input)
         # Sort the embedded inputs by decreasing order of input length.
         # sorted_input shape: (batch_size, sequence_length, embedding_dim)
