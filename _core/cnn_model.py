@@ -197,7 +197,9 @@ def train(model, optimizer, train_dataloader, save_best, val_dataloader=None, ep
         if val_dataloader is not None:
             # After the completion of each training epoch, measure the model's
             # performance on our validation set.
-            val_loss, val_accuracy = evaluate(model, val_dataloader)
+            val_loss, val_accuracy = evaluate(model = model, 
+                                             val_dataloader = val_dataloader, 
+                                             save_best = save_best)
 
             # Track the best accuracy
             if val_accuracy > best_accuracy:
