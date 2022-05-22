@@ -72,6 +72,7 @@ class CNN_NLP(nn.Module):
         """
 
         # Get embeddings from `input_ids`. Output shape: (b, max_len, embed_dim)
+        print(input_ids.shape)
         x_embed = self.embedding(input_ids).float()
         print(x_embed.shape)
 
