@@ -25,24 +25,25 @@ def bow_classifier(data):
     counter = Counter()
     for (line, label) in data:
         counter.update(line)
-    vocab = v(counter, specials = ['<unk>'], special_first = True, min_freq = 1000)
-    return vocab, counter
+    global vocab_words
+    vocab_words = v(counter, specials = ['<unk>'], special_first = True, min_freq = 1000)
+    return vocab_words, counter
 
 def collate_into_bow(batch, device = DEVICE):
     labels = [0] * len(batch)
-    vectors = torch.zeros(len(batch), len(vocab))
+    vectors = torch.zeros(len(batch), len(vocab_words))
     for index, (words, label) in enumerate(batch):
         labels[index] = LABEL_MAPPINGS[label]
         for word in words:
-            index_word = vocab[word]    
+            index_word = vocab_words[word]    
             vectors[index, int(index_word)] += 1 / len(words)     
     labels = torch.tensor(labels)
     return labels.to(device), vectors.to(device)
 
-def data_loader_bow(data, vocab, batch_size, shuffle = False, data_object = None):
+def data_loader_bow(data, vocab_words, batch_size, shuffle = False, data_object = None):
     if data_object:
-        vocab = bow_classifier(data_object.all_data)
-    print("Vocab Size = ", len(vocab))
+        vocab_words = bow_classifier(data_object.all_data)
+    print("Vocab Size = ", len(vocab_words))
     dataloader = DataLoader(data, 
                             batch_size=batch_size, 
                             shuffle=shuffle, 
@@ -166,15 +167,15 @@ def embed_data(data, glove):
 ## Glove with Torchtext (Bag of Words)
 
 def collate_into_cbow_glove(object, embedding_dim = 300, device = DEVICE):
-    batch, glove_embeddings, vocab = object
-    vocab = vocab[0]
+    batch, glove_embeddings, vocab_words = object
+    vocab_words = vocab_words[0]
     labels = [0] * len(batch)
-    vocab_size = len(vocab)
+    vocab_size = len(vocab_words)
     vectors = torch.zeros(len(batch), vocab_size, embedding_dim)
     for index, (word, label) in enumerate(batch):
         labels[index] = LABEL_MAPPINGS[label]
         for w in word:
-            index_word = vocab[w]    
+            index_word = vocab_words[w]    
             vectors[index, int(index_word)]= glove_embeddings.get(w, glove_embeddings["<UNK>"])
     labels = torch.tensor(labels)
     return labels.to(device), vectors.to(device)
@@ -182,9 +183,9 @@ def collate_into_cbow_glove(object, embedding_dim = 300, device = DEVICE):
 
 def data_loader_bow_glove(object, batch_size, shuffle = False):
     data, glove = object
-    vocab = bow_classifier(data)
+    vocab_words = bow_classifier(data)
 
-    object2 = data, glove, vocab
+    object2 = data, glove, vocab_words
     
     dataloader = DataLoader(object2, 
                             batch_size=batch_size, 
