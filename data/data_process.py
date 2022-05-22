@@ -70,16 +70,15 @@ class dep_data():
     def split_data(self, r_seed, train_rate = 0.6, test_rate = 0.2, pandas = False):
 
         if pandas:
-            self.all_data = shuffle(self.all_data, random_state = r_seed)
             
-            X_train, X_test, y_train, y_test = train_test_split(self.all_data["text"].to_list(), 
-                                                                self.all_data["class"].to_list(),
+            X_train, X_test, y_train, y_test = train_test_split(self.all_data["text"], 
+                                                                self.all_data["class"],
                                                                 test_size=test_rate, random_state=r_seed)
             X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size= 1 - train_rate - test_rate, 
                                                             random_state=r_seed)
-            self.train = pd.DataFrame(data = list(zip(X_train, y_train)), columns = ["text", "class"])                                             
-            self.test = pd.DataFrame(data = list(zip(X_test, y_test)), columns = ["text", "class"])
-            self.val = pd.DataFrame(data = list(zip(X_val, y_val)), columns = ["text", "class"])
+            self.train = pd.DataFrame(X_train).join(pd.DataFrame(y_train)).reset_index()
+            self.test = pd.DataFrame(X_test).join(pd.DataFrame(y_test)).reset_index()
+            self.val = pd.DataFrame(X_val).join(pd.DataFrame(y_val)).reset_index()
 
         else:
             random.seed(r_seed)

@@ -69,7 +69,8 @@ def create_tf_idf(data):
 
     count_tokens = countvectorizer.get_feature_names()
     tfidf_tokens = tfidfvectorizer.get_feature_names()
+    params = tfidfvectorizer.get_params()
 
     tfidf_tokens_mapping = {token: index for index, token in enumerate(tfidf_tokens)}
 
-    return  torch.tensor(tfidf_wm.toarray()), torch.tensor(labels)
+    return  torch.tensor(tfidf_wm.toarray()), torch.tensor(labels), params
