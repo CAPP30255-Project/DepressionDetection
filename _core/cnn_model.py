@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
+import matplotlib.pyplot as plt
 import math
 
 DEVICE = 'cuda'
@@ -154,7 +155,7 @@ def train(model, optimizer, train_dataloader, save_best, val_dataloader=None, ep
     # Start training loop
     print("Start training...\n")
     print("-"*60)
-
+    accuracies = []
     for epoch_i in range(epochs):
         # =======================================
         #               Training
@@ -201,10 +202,15 @@ def train(model, optimizer, train_dataloader, save_best, val_dataloader=None, ep
             val_loss, val_accuracy = evaluate(model = model, 
                                              val_dataloader = val_dataloader, 
                                              save_best = save_best)
+            accuracies.append(val_accuracy)
 
             # Track the best accuracy
             if val_accuracy > best_accuracy:
                 best_accuracy = val_accuracy
+                with open(save_best, 'wb') as f:
+                    torch.save(model, f)
+                    print("New best model saved!")
+
 
             # Print performance over the entire training data
             time_elapsed = time.time() - t0_epoch
@@ -213,6 +219,7 @@ def train(model, optimizer, train_dataloader, save_best, val_dataloader=None, ep
             
     print("\n")
     print(f"Training complete! Best accuracy: {best_accuracy:.2f}%.")
+    plt.plot(range(1, epochs+1), accuracies)
 
 def evaluate(model, val_dataloader, save_best):
     """After the completion of each training epoch, measure the model's
@@ -225,7 +232,6 @@ def evaluate(model, val_dataloader, save_best):
     # Tracking variables
     val_accuracy = []
     val_loss = []
-    min_val_loss = math.inf
 
     # For each batch in our validation set...
     for batch in val_dataloader:
@@ -239,10 +245,7 @@ def evaluate(model, val_dataloader, save_best):
         # Compute loss
         loss = loss_fn(logits, b_labels)
         val_loss.append(loss.item())
-        if min_val_loss == loss.item():
-          with open(save_best, 'wb') as f:
-            torch.save(model, f)
-          print("New best model saved!")
+          
 
         # Get the predictions
         preds = torch.argmax(logits, dim=1).flatten()
