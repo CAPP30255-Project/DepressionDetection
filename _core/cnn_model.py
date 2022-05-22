@@ -144,7 +144,7 @@ def set_seed(seed_value=42):
     torch.manual_seed(seed_value)
     torch.cuda.manual_seed_all(seed_value)
 
-def train(model, optimizer, train_dataloader, val_dataloader=None, epochs=10):
+def train(model, optimizer, train_dataloader, val_dataloader=None, epochs=10, log_interval = 500):
     """Train the CNN model."""
     
     # Tracking best validation accuracy
@@ -186,7 +186,9 @@ def train(model, optimizer, train_dataloader, val_dataloader=None, epochs=10):
 
             # Update parameters
             optimizer.step()
-
+            if step % log_interval == 0:
+                print(f"step {step} | loss {loss.item()}")
+                print("~"*30)
         # Calculate the average loss over the entire training data
         avg_train_loss = total_loss / len(train_dataloader)
 
