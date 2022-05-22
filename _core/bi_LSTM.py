@@ -136,7 +136,8 @@ def train_biLSTM(data_object,
                 learning_rate = 0.,
                 epochs = 16,
                 using_GPU = True,
-                glove = False):
+                glove = False,
+                save_best = None):
 
     model = RNNDepressionClassifier(vocab_size = vocab_size,
                                     num_classes = num_classes, 
@@ -145,6 +146,7 @@ def train_biLSTM(data_object,
                                     num_layers = num_layers)
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     loss_function = nn.NLLLoss()
+    best_accuracy = 0
     if using_GPU:
         model.cuda()
         loss_function.to('cuda')
@@ -166,6 +168,12 @@ def train_biLSTM(data_object,
             accuracy = get_accuracy(data_object.bow_val_dl, model)
         
         accuracies.append(accuracy)
+        # Track the best accuracy
+        if accuracy > best_accuracy:
+            best_accuracy = accuracy
+            with open(save_best, 'wb') as f:
+                torch.save(model, f)
+                print("New best model saved!")
         print()
         print(f'After epoch {epoch} the validation accuracy is {accuracy:.3f}.')
         print()
@@ -182,4 +190,4 @@ def get_accuracy(dataloader, model):
             _, preds = torch.max(log_probs, 1)
             correct = sum(preds == label).sum().item()
             total = len(label)
-            return 100 * correct / total
+    return 100 * correct / total
