@@ -73,6 +73,3 @@ def create_tf_idf(data):
     tfidf_tokens_mapping = {token: index for index, token in enumerate(tfidf_tokens)}
 
     return  torch.tensor(tfidf_wm.toarray()), torch.tensor(labels)
-
-def collate_function_tfidf(batch):
-    
