@@ -4,7 +4,7 @@ Authors: Jacob Jameson, Deniz Tokmakoglu
 """
 
 from collections import Counter
-from torchtext.vocab import vocab
+from torchtext.vocab import vocab as v 
 import torch
 from torch.utils.data import DataLoader
 import numpy as np
@@ -21,12 +21,11 @@ DEVICE = 'cuda' # change if working on a CPU
 
 ### Bag of Words ###
 
-def bow_classifier(data):
+def bow_classifier2(data):
     counter = Counter()
     for (line, label) in data:
         counter.update(line)
-    global vocab 
-    vocab = vocab(counter, min_freq=1000)
+    vocab = v(counter, specials = ['<unk>'], special_first = True, min_freq = 1000)
     return vocab, counter
 
 def collate_into_bow(batch, device = DEVICE):
