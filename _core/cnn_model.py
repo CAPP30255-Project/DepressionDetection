@@ -72,9 +72,7 @@ class CNN_NLP(nn.Module):
         """
 
         # Get embeddings from `input_ids`. Output shape: (b, max_len, embed_dim)
-        print(input_ids.shape)
         x_embed = self.embedding(input_ids.long()).float()
-        print(x_embed.shape)
 
         # Permute `x_embed` to match input shape requirement of `nn.Conv1d`.
         # Output shape: (b, embed_dim, max_len)
