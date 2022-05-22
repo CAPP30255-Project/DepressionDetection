@@ -152,7 +152,6 @@ def train(model, optimizer, train_dataloader, val_dataloader=None, epochs=10, lo
 
     # Start training loop
     print("Start training...\n")
-    print(f"{'Epoch':^7} | {'Train Loss':^12} | {'Val Loss':^10} | {'Val Acc':^9} | {'Elapsed':^9}")
     print("-"*60)
 
     for epoch_i in range(epochs):
@@ -206,6 +205,7 @@ def train(model, optimizer, train_dataloader, val_dataloader=None, epochs=10, lo
 
             # Print performance over the entire training data
             time_elapsed = time.time() - t0_epoch
+            print(f"{'Epoch':^7} | {'Train Loss':^12} | {'Val Loss':^10} | {'Val Acc':^9} | {'Elapsed':^9}")
             print(f"{epoch_i + 1:^7} | {avg_train_loss:^12.6f} | {val_loss:^10.6f} | {val_accuracy:^9.2f} | {time_elapsed:^9.2f}")
             
     print("\n")
