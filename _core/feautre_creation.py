@@ -27,6 +27,7 @@ def bow_classifier(data):
         counter.update(line)
     global vocab_words
     vocab_words = v(counter, specials = ['<unk>'], special_first = True, min_freq = 1000)
+    vocab_words.set_default_index(0)
     return vocab_words, counter
 
 def collate_into_bow(batch, device = DEVICE):
