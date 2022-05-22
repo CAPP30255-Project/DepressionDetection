@@ -21,7 +21,7 @@ DEVICE = 'cuda' # change if working on a CPU
 
 ### Bag of Words ###
 
-def bow_classifier2(data):
+def bow_classifier(data):
     counter = Counter()
     for (line, label) in data:
         counter.update(line)
