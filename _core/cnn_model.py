@@ -186,7 +186,7 @@ def train(model, optimizer, train_dataloader, val_dataloader=None, epochs=10, lo
             # Update parameters
             optimizer.step()
             if step % log_interval == 0:
-                print(f"step {step} | loss {loss.item()}")
+                print(f"step {step} | loss {round(loss.item(), 3)}")
                 print("~"*30)
         # Calculate the average loss over the entire training data
         avg_train_loss = total_loss / len(train_dataloader)
