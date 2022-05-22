@@ -144,7 +144,7 @@ def set_seed(seed_value=42):
     torch.manual_seed(seed_value)
     torch.cuda.manual_seed_all(seed_value)
 
-def train(model, optimizer, train_dataloader, val_dataloader=None, epochs=10, log_interval = 500):
+def train(model, optimizer, train_dataloader, save_best, val_dataloader=None, epochs=10, log_interval = 500):
     """Train the CNN model."""
     
     # Tracking best validation accuracy
@@ -211,7 +211,7 @@ def train(model, optimizer, train_dataloader, val_dataloader=None, epochs=10, lo
     print("\n")
     print(f"Training complete! Best accuracy: {best_accuracy:.2f}%.")
 
-def evaluate(model, val_dataloader):
+def evaluate(model, val_dataloader, save_best):
     """After the completion of each training epoch, measure the model's
     performance on our validation set.
     """
@@ -222,6 +222,7 @@ def evaluate(model, val_dataloader):
     # Tracking variables
     val_accuracy = []
     val_loss = []
+    min_val_loss = math.inf
 
     # For each batch in our validation set...
     for batch in val_dataloader:
@@ -235,6 +236,10 @@ def evaluate(model, val_dataloader):
         # Compute loss
         loss = loss_fn(logits, b_labels)
         val_loss.append(loss.item())
+        if min_val_loss == loss.item():
+          with open(save_best, 'wb') as f:
+            torch.save(model, f)
+          print("New best model saved!")
 
         # Get the predictions
         preds = torch.argmax(logits, dim=1).flatten()
